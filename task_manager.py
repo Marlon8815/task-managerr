@@ -7,7 +7,7 @@ def crear_tarea():
         print("⚠️ La tarea ya existe.")
         return
     tareas[titulo] = False
-    print(f"✅ Tarea '{titulo}' creada.")
+    print(f"✅ Tarea '{titulo}' creada con éxito.")
 
 def listar_tareas():
     if not tareas:
@@ -83,4 +83,5 @@ def mostrar_menu():
             print("❌ Opción inválida.")
 
 # Iniciar el programa
-mostrar_menu()
+if __name__ == "__main__":
+    mostrar_menu()
