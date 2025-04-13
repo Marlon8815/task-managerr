@@ -1,15 +1,20 @@
-# task_manager.py
+import uuid
 
-# Diccionario donde se guardan las tareas
-tareas = {}
+# Lista donde se guardan las tareas
+tareas = []
+
+def generar_id_unico():
+    return str(uuid.uuid4())
 
 def crear_tarea():
-    titulo = input("📝 Ingrese el título de la tarea: ")
-    if titulo in tareas:
-        print("⚠️ La tarea ya existe.")
-        return
-    tareas[titulo] = False
-    print(f"✅ Tarea '{titulo}' creada con éxito.")
+    descripcion = input("📝 Ingrese la descripción de la tarea: ")
+    nueva_tarea = {
+        "id": generar_id_unico(),
+        "description": descripcion,
+        "completed": False
+    }
+    tareas.append(nueva_tarea)
+    print(f"✅ Tarea '{descripcion}' creada con éxito.")
 
 def listar_tareas():
     if not tareas:
@@ -17,9 +22,9 @@ def listar_tareas():
         return
 
     print("\n📋 Lista de tareas:")
-    for i, (titulo, completada) in enumerate(tareas.items(), 1):
-        estado = "✅" if completada else "❌"
-        print(f"{i}. {titulo} - {estado}")
+    for i, tarea in enumerate(tareas, 1):
+        estado = "✅" if tarea["completed"] else "❌"
+        print(f"{i}. {tarea['description']} - {estado} (ID: {tarea['id']})")
 
 def completar_tarea():
     if not tareas:
@@ -27,16 +32,13 @@ def completar_tarea():
         return
 
     listar_tareas()
-
     try:
         num = int(input("✅ Ingrese el número de la tarea completada: "))
         if num < 1 or num > len(tareas):
             print("❌ Número inválido.")
             return
-
-        titulo = list(tareas.keys())[num - 1]
-        tareas[titulo] = True
-        print(f"✅ Tarea '{titulo}' marcada como completada.")
+        tareas[num - 1]["completed"] = True
+        print(f"✅ Tarea '{tareas[num - 1]['description']}' marcada como completada.")
     except ValueError:
         print("❌ Debe ingresar un número válido.")
 
@@ -46,16 +48,13 @@ def eliminar_tarea():
         return
 
     listar_tareas()
-
     try:
-        num = int(input("🗑️ Ingrese el número de la tarea que quiere eliminar: "))
+        num = int(input("🗑️ Ingrese el número de la tarea a eliminar: "))
         if num < 1 or num > len(tareas):
             print("❌ Número inválido.")
             return
-
-        titulo = list(tareas.keys())[num - 1]
-        del tareas[titulo]
-        print(f"🗑️ Tarea '{titulo}' eliminada correctamente.")
+        tarea_eliminada = tareas.pop(num - 1)
+        print(f"🗑️ Tarea '{tarea_eliminada['description']}' eliminada correctamente.")
     except ValueError:
         print("❌ Debe ingresar un número válido.")
 
@@ -70,7 +69,6 @@ def mostrar_menu():
         print("0. Salir")
 
         opcion = input("Selecciona una opción: ")
-
         if opcion == "1":
             crear_tarea()
         elif opcion == "2":
@@ -85,7 +83,5 @@ def mostrar_menu():
         else:
             print("❌ Opción inválida.")
 
-# Iniciar el programa
 if __name__ == "__main__":
     mostrar_menu()
-
